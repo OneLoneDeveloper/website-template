@@ -1,34 +1,89 @@
-const navbar = document.querySelector(".navbar");
-const toggle = document.querySelector(".navbar__toggle");
-const menu = document.querySelector(".navbar__menu");
+/* =========================================
+   Navbar Component
 
-function setMenuState(isOpen) {
-  toggle.setAttribute("aria-expanded", String(isOpen));
-  menu.dataset.open = String(isOpen);
+   Expected HTML:
+   - Navbar container: .navbar or [data-navbar]
+   - Toggle button: .navbar__toggle or [data-navbar-toggle]
+   - Menu: .navbar__menu or [data-navbar-menu]
+   - Toggle button should have aria-controls="menu-id"
+   - Toggle button should have aria-expanded="false"
+========================================= */
+
+export function initNavbar(root = document) {
+  const navbars = root.querySelectorAll("[data-navbar], .navbar");
+
+  navbars.forEach((navbar) => {
+    if (navbar.dataset.navbarInitialized === "true") return;
+
+    const toggle = navbar.querySelector("[data-navbar-toggle], .navbar__toggle");
+
+    if (!toggle) return;
+
+    const menu = getNavbarMenu(navbar, toggle);
+
+    if (!menu) return;
+
+    navbar.dataset.navbarInitialized = "true";
+
+    const isInitiallyOpen = toggle.getAttribute("aria-expanded") === "true";
+    setNavbarState(toggle, menu, isInitiallyOpen);
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+
+      setNavbarState(toggle, menu, !isOpen);
+    });
+
+    navbar.addEventListener("click", (event) => {
+      const link = event.target.closest(".navbar__link, [data-navbar-link]");
+
+      if (!link) return;
+
+      closeNavbar(toggle, menu);
+    });
+
+    document.addEventListener("click", (event) => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+
+      if (!isOpen) return;
+      if (navbar.contains(event.target)) return;
+
+      closeNavbar(toggle, menu);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+
+      if (!isOpen) return;
+      if (event.key !== "Escape") return;
+
+      closeNavbar(toggle, menu);
+      toggle.focus();
+    });
+  });
 }
 
-toggle.addEventListener("click", () => {
-  const isOpen = toggle.getAttribute("aria-expanded") === "true";
-  setMenuState(!isOpen);
-});
+function getNavbarMenu(navbar, toggle) {
+  const menuId = toggle.getAttribute("aria-controls");
 
-document.addEventListener("click", (event) => {
-  const isOpen = toggle.getAttribute("aria-expanded") === "true";
+  if (menuId) {
+    const controlledMenu = document.getElementById(menuId);
 
-  if (isOpen && !navbar.contains(event.target)) {
-    setMenuState(false);
+    if (controlledMenu) return controlledMenu;
   }
-});
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    setMenuState(false);
-    toggle.focus();
-  }
-});
+  return navbar.querySelector("[data-navbar-menu], .navbar__menu");
+}
 
-window.addEventListener("resize", () => {
-  if (window.matchMedia("(min-width: 768px)").matches) {
-    setMenuState(false);
-  }
-});
+function openNavbar(toggle, menu) {
+  setNavbarState(toggle, menu, true);
+}
+
+function closeNavbar(toggle, menu) {
+  setNavbarState(toggle, menu, false);
+}
+
+function setNavbarState(toggle, menu, shouldOpen) {
+  toggle.setAttribute("aria-expanded", String(shouldOpen));
+  menu.dataset.open = String(shouldOpen);
+}

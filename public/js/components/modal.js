@@ -1,56 +1,74 @@
-/* ================================
+/* =========================================
    Modal Component
 
-   Usage:
-   - Add data-modal-open="modal-id" to any button/link that opens a modal.
-   - Add data-modal-close to any button inside the modal that closes it.
-   - The modal itself should be a <dialog> with a matching id.
-================================ */
+   Expected HTML:
+   - Open button: data-modal-open="modal-id"
+   - Modal: <dialog class="modal" id="modal-id">
+   - Close button inside modal: data-modal-close
 
-document.addEventListener("click", (event) => {
-  const openButton = event.target.closest("[data-modal-open]");
-  const closeButton = event.target.closest("[data-modal-close]");
+   Example:
+   <button data-modal-open="example-modal">Open Modal</button>
 
-  if (openButton) {
-    const modalId = openButton.dataset.modalOpen;
-    const modal = document.getElementById(modalId);
+   <dialog class="modal" id="example-modal">
+     <div class="modal__panel">
+       <button data-modal-close>Close</button>
+     </div>
+   </dialog>
+========================================= */
+
+export function initModal(root = document) {
+  if (document.documentElement.dataset.modalInitialized === "true") return;
+
+  document.documentElement.dataset.modalInitialized = "true";
+
+  root.addEventListener("click", (event) => {
+    const openButton = event.target.closest("[data-modal-open]");
+    const closeButton = event.target.closest("[data-modal-close]");
+
+    if (openButton) {
+      const modalId = openButton.dataset.modalOpen;
+      const modal = document.getElementById(modalId);
+
+      if (!modal) return;
+
+      openModal(modal);
+    }
+
+    if (closeButton) {
+      const modal = closeButton.closest("dialog");
+
+      if (!modal) return;
+
+      closeModal(modal);
+    }
+  });
+
+  root.addEventListener("click", (event) => {
+    const modal = event.target.closest("dialog.modal");
 
     if (!modal) return;
 
-    openModal(modal);
-  }
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
 
-  if (closeButton) {
-    const modal = closeButton.closest("dialog");
+  document.addEventListener(
+    "close",
+    (event) => {
+      if (!event.target.matches("dialog.modal")) return;
 
-    if (!modal) return;
-
-    closeModal(modal);
-  }
-});
-
-document.addEventListener("click", (event) => {
-  const modal = event.target.closest("dialog.modal");
-
-  if (!modal) return;
-
-  /*
-    Close when clicking the backdrop.
-
-    For <dialog>, clicking the backdrop makes the dialog itself
-    the event target. Clicking inside .modal__panel does not.
-  */
-  if (event.target === modal) {
-    closeModal(modal);
-  }
-});
+      document.documentElement.classList.remove("has-modal-open");
+    },
+    true
+  );
+}
 
 function openModal(modal) {
   if (!(modal instanceof HTMLDialogElement)) return;
   if (modal.open) return;
 
-  document.documentElement.classList.add("modal-is-open");
-
+  document.documentElement.classList.add("has-modal-open");
   modal.showModal();
 }
 
@@ -59,16 +77,5 @@ function closeModal(modal) {
   if (!modal.open) return;
 
   modal.close();
-
-  document.documentElement.classList.remove("modal-is-open");
+  document.documentElement.classList.remove("has-modal-open");
 }
-
-document.addEventListener(
-  "close",
-  (event) => {
-    if (!event.target.matches("dialog.modal")) return;
-
-    document.documentElement.classList.remove("modal-is-open");
-  },
-  true
-);

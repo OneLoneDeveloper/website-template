@@ -1,43 +1,58 @@
-/* ================================
+/* =========================================
    Accordion Component
 
-   Usage:
-   - Add data-accordion to the accordion container.
-   - Add data-accordion-trigger to each accordion button.
-   - Each button needs aria-controls="panel-id".
-   - Each panel needs a matching id="panel-id".
+   Expected HTML:
+   - Accordion container: data-accordion
+   - Trigger button: data-accordion-trigger
+   - Trigger button needs aria-controls="panel-id"
+   - Panel needs matching id="panel-id"
 
-   Default behavior:
+   Default:
    - Only one panel opens at a time.
 
    Optional:
-   - Add data-accordion-multiple to the accordion container
-     to allow multiple panels to stay open.
-================================ */
+   - Add data-accordion-multiple to allow multiple open panels.
+========================================= */
 
-document.addEventListener("click", (event) => {
-  const trigger = event.target.closest("[data-accordion-trigger]");
+export function initAccordion(root = document) {
+  const accordions = root.querySelectorAll("[data-accordion]");
 
-  if (!trigger) return;
+  accordions.forEach((accordion) => {
+    if (accordion.dataset.accordionInitialized === "true") return;
 
-  const accordion = trigger.closest("[data-accordion]");
+    accordion.dataset.accordionInitialized = "true";
 
-  if (!accordion) return;
+    accordion.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-accordion-trigger]");
 
+      if (!trigger) return;
+      if (!accordion.contains(trigger)) return;
+
+      const panel = getAccordionPanel(trigger);
+
+      if (!panel) return;
+
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      const allowsMultiplePanels = accordion.hasAttribute(
+        "data-accordion-multiple"
+      );
+
+      if (!allowsMultiplePanels && !isOpen) {
+        closeOtherAccordionPanels(accordion, trigger);
+      }
+
+      setAccordionPanelState(trigger, panel, !isOpen);
+    });
+  });
+}
+
+function getAccordionPanel(trigger) {
   const panelId = trigger.getAttribute("aria-controls");
-  const panel = document.getElementById(panelId);
 
-  if (!panel) return;
+  if (!panelId) return null;
 
-  const isOpen = trigger.getAttribute("aria-expanded") === "true";
-  const allowsMultipleOpenPanels = accordion.hasAttribute("data-accordion-multiple");
-
-  if (!allowsMultipleOpenPanels && !isOpen) {
-    closeOtherAccordionPanels(accordion, trigger);
-  }
-
-  setAccordionPanelState(trigger, panel, !isOpen);
-});
+  return document.getElementById(panelId);
+}
 
 function closeOtherAccordionPanels(accordion, currentTrigger) {
   const triggers = accordion.querySelectorAll("[data-accordion-trigger]");
@@ -45,8 +60,7 @@ function closeOtherAccordionPanels(accordion, currentTrigger) {
   triggers.forEach((trigger) => {
     if (trigger === currentTrigger) return;
 
-    const panelId = trigger.getAttribute("aria-controls");
-    const panel = document.getElementById(panelId);
+    const panel = getAccordionPanel(trigger);
 
     if (!panel) return;
 
