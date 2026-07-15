@@ -1,5 +1,5 @@
 import app from "./app.js";
-import environment from "../config/environment.js";
+import environment from "./config/environment.js";
 
 const server = app.listen(environment.port, () => {
   console.log(

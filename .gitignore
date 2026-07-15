@@ -142,3 +142,26 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+
+
+
+
+
+
+# Local environment variables and secrets
+.env.*
+!.env.example
+
+
+# Temporary files
+tmp/
+temp/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/

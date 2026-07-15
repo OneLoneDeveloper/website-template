@@ -6,15 +6,312 @@
 ========================================= */
 
 /* 1. Remove browser defaults */
-@import "reset.css";
+/* @import "reset.css"; */
 
 /* 2. Shared design tokens */
-@import "tokens.css";
+/* @import "tokens.css"; */
 
 /* 3. Site-wide base styles */
-@import "base.css";
+/* @import "base.css"; */
 
 /* 4. Components */
-@import "components/navbar.css";
+/* @import "components/navbar.css";
 @import "components/modal.css";
-@import "components/accordion.css";
+@import "components/accordion.css"; */
+
+/* ========================================
+   Basic reset
+======================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  line-height: 1.6;
+  color: #202124;
+  background-color: #ffffff;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* ========================================
+   Reusable layout
+======================================== */
+
+.container {
+  width: min(1100px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.section {
+  padding-block: 5rem;
+}
+
+/* ========================================
+   Header
+======================================== */
+
+.site-header {
+  border-bottom: 1px solid #dddddd;
+  background-color: #ffffff;
+}
+
+.header-inner {
+  min-height: 4.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.site-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.site-nav a {
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  text-decoration: underline;
+}
+
+.menu-toggle {
+  display: none;
+
+  padding: 0.5rem 0.8rem;
+
+  border: 1px solid #333333;
+  border-radius: 0.25rem;
+
+  color: #202124;
+  background-color: #ffffff;
+
+  cursor: pointer;
+}
+
+/* ========================================
+   Hero
+======================================== */
+
+.hero {
+  padding-block: 7rem;
+  background-color: #f3f5f7;
+}
+
+.hero .container {
+  max-width: 800px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 0.75rem;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin-block: 0 1rem;
+
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  line-height: 1.1;
+}
+
+.hero-description {
+  max-width: 650px;
+  margin: 0 auto 2rem;
+
+  font-size: 1.15rem;
+}
+
+/* ========================================
+   Buttons
+======================================== */
+
+.button {
+  display: inline-block;
+
+  padding: 0.75rem 1.25rem;
+
+  border: 2px solid #202124;
+  border-radius: 0.35rem;
+
+  font-weight: 700;
+  text-decoration: none;
+
+  color: #ffffff;
+  background-color: #202124;
+}
+
+.button:hover,
+.button:focus-visible {
+  color: #202124;
+  background-color: transparent;
+}
+
+/* ========================================
+   Cards
+======================================== */
+
+.section h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.card-grid {
+  margin-top: 2rem;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1.5rem;
+
+  border: 1px solid #dddddd;
+  border-radius: 0.5rem;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+/* ========================================
+   Error pages
+======================================== */
+
+.error-page {
+  padding-block: 7rem;
+  text-align: center;
+}
+
+.error-code {
+  margin: 0;
+
+  font-size: clamp(4rem, 15vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.error-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.error-page .button {
+  margin-top: 1.5rem;
+}
+
+/* ========================================
+   Footer
+======================================== */
+
+.site-footer {
+  padding-block: 2rem;
+  border-top: 1px solid #dddddd;
+  background-color: #f3f5f7;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-inner p {
+  margin: 0;
+}
+
+/* ========================================
+   Responsive layout
+======================================== */
+
+@media (max-width: 700px) {
+  .header-inner {
+    position: relative;
+    flex-wrap: wrap;
+    padding-block: 1rem;
+  }
+
+  .js .menu-toggle {
+    display: block;
+  }
+
+  .js .site-nav {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    padding-top: 1rem;
+  }
+
+  .js .site-nav.is-open {
+    display: flex;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-block: 5rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

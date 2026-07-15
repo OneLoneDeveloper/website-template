@@ -1,0 +1,57 @@
+<%- include("../partials/header", { title }) %>
+
+<main class="main-content">
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Node.js Client Starter</p>
+
+      <h1>Build client websites without starting from scratch.</h1>
+
+      <p class="hero-description">
+        This starter project includes Express, EJS, routing, controllers,
+        error handling, static files, environment configuration, and tests.
+      </p>
+
+      <a class="button" href="#features">
+        View starter features
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <h2>Included in this starter</h2>
+
+      <div class="card-grid">
+        <article class="card">
+          <h3>Organized structure</h3>
+
+          <p>
+            Routes, controllers, middleware, views, and public files are kept
+            in clearly separated folders.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Error handling</h3>
+
+          <p>
+            Missing pages and unexpected server errors are handled in one
+            central location.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Automated tests</h3>
+
+          <p>
+            Basic tests verify that important routes return the expected
+            responses.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

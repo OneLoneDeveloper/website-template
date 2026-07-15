@@ -2,9 +2,9 @@ import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import homeRoutes from "./routes/homeRoutes.js";
-import { notFound } from "../middleware/notFound.js";
-import { errorHandler } from "../middleware/errorHandler.js";
+import homeRoutes from "./routes/homeRoute.js";
+import { notFound } from "./middleware/notFound.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 // ES modules do not automatically provide __filename and __dirname.
 // These two lines recreate them.
