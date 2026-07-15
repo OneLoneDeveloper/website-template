@@ -18,6 +18,15 @@
     </div>
   </section>
 
+  <section>
+    <button type="button" data-modal-open="example-modal">Open Modal</button>
+      <%- include('../components/modal', {
+        id: 'example-modal',
+        modalTitle: 'Example Modal',
+        modalText: 'This is the content shown inside the dialog.'
+      }) %>
+  </section>
+
   <section class="section" id="features">
     <div class="container">
       <h2>Included in this starter</h2>
